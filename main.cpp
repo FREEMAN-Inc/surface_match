@@ -8,8 +8,16 @@ int main(int argc, char *argv[]) {
     ppf::PointCloud model;
     ppf::readPLY(argv[ 1 ], model);
     ppf::PointCloud scene;
+
+
     ppf::readPLY(argv[ 2 ], scene);
-    scene.viewPoint = {-200, -50, -500};
+    //scene.viewPoint = {-200, -50, -500};
+    scene.viewPoint = {0.f, 0.f, 0.f};
+
+    // 1. remove bottom horizontal plane
+    //scenefilter = removePlaneRANSAC(scene, 2000, 0.004f, Eigen::Vector3f(0,0,1), 12.0f, 1000);
+
+    // 3. keep up-facing normals
     auto tmp        = model;
     // model.normal.clear();
     // scene.normal.clear();
@@ -17,7 +25,7 @@ int main(int argc, char *argv[]) {
     {
         ppf::Timer    t("train model");
         ppf::Detector detector;
-        detector.trainModel(model, 0.025f);
+        detector.trainModel(model, 0.015f);
         detector.save("1.model");
     }
 
@@ -29,7 +37,7 @@ int main(int argc, char *argv[]) {
     {
         ppf::Timer t("match scene");
 
-        detector.matchScene(scene, pose, score, 0.025f, 0.1f, 0.1f,
+        detector.matchScene(scene, pose, score, 0.015f, 0.1f, 0.1f,
                             ppf::MatchParam{55, 10, true, false, 0.5, 0, true, true, 15, 0.3},
                             &result);
     }
@@ -44,8 +52,11 @@ int main(int argc, char *argv[]) {
     ppf::writePLY("sampledScene.ply", result.sampledScene);
     ppf::writePLY("sampledKeypoint.ply", result.keyPoint);
 
+
+
     return 0;
 }
+
 /*
 int main2(int argc, char *argv[]) {
     ppf::PointCloud model;
@@ -82,7 +93,7 @@ int main2(int argc, char *argv[]) {
     return 0;
 }
 
-int main3(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     ppf::PointCloud model;
     ppf::readPLY(argv[ 1 ], model);
     model.viewPoint = {620, 100, 500};
