@@ -59,4 +59,9 @@ if(BUILD_EXAMPLE)
     add_executable(test_ppf main.cpp)
     target_include_directories(test_ppf PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIRS})
     target_link_libraries(test_ppf ppf::ppf)
+
+    add_executable(test_rmback test_rmback.cpp)
+    target_include_directories(test_rmback PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIRS})
+    target_link_libraries(test_rmback ppf::ppf)
+
 endif(BUILD_EXAMPLE)
